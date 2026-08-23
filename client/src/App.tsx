@@ -1,15 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from 'react'
+import { socket } from './services/socket';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isConnected, setConnected] = useState(socket.connected);
+  useEffect(() => {
+    function onConnect(){
+      setConnected(1)
+    }
+    function onDisconnect(){
+      setConnected(0);
+    }
 
-  return (
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
+  }, []);
+  return(
     <>
-   </>
-  )}
+    <div>
+      <h1>KDS Grill</h1>
+      <p>
+        Server Status: {' '}
+        <strong style={{color: isConnected ? 'green' : 'red'}}>
+          {isConnected ? 'Connected' :  'Disconnected'}
+        </strong>
+      </p>
+    </div>
+    </>
+  )
+  }
 
 export default App
