@@ -78,7 +78,7 @@ export default function POS() {
                 {order.items.map((item, index) => (
                   <div className="order-details">
                     <div className="order-item">{item}</div>
-                    <div className="deleteItem" key={index} onClick={() => onHandleDelete(index)} >X</div>
+                    <div className="deleteItem" key={index} onClick={() => onHandleDelete(index)} >-</div>
                   </div>
                 ))}
               </div>
