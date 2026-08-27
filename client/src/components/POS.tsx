@@ -48,8 +48,10 @@ export default function POS() {
 
   const onHandleDelete = (index: number) => {
     console.log(index);
-    let itemSelected:Product | undefined, newOrder: Order, newTotal;
-    itemSelected = product.find(item => order.items[index])
+    let itemSelected:Product | undefined;
+    let newOrder: Order;
+    let newTotal: number;
+    itemSelected = product.find((id) => id.name === order.items[index])
     newOrder = {...order}
     newOrder.items.splice(index, 1);
     newTotal = order.total - itemSelected.price;
