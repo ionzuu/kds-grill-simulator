@@ -1,49 +1,71 @@
 import { useState } from "react"
+import { socket } from "../services/socket"
 
 interface Order {
-  id: number;
-  items: string[]
-  total: number
+  id: number,
+  items: string[],
+  total: number,
+  pattiesT: number,
 }
 
 interface Product {
   name: string,
   shortcut: string,
-  price: number
+  price: number,
+  patties: number,
 }
-
-
 
 export default function POS() {
 
-  const [order, setOrder] = useState<Order>({ id: 0, items: [], total: 0 })
+  const [order, setOrder] = useState<Order>({ id: 0, items: [], total: 0 , pattiesT: 0})
 
   const product: Product[] = [
     {
       name: 'Single SteakBurger',
       shortcut: 'SingleSteak',
       price: 5,
+      patties: 1,
     },
     {
       name: 'Double SteakBurger',
       shortcut: 'DoubleSteak',
       price: 7.5,
+      patties: 2,
     },
     {
       name: 'Triple SteakBurger',
       shortcut: 'TipleSteak',
       price: 10,
+      patties: 3,
     }
   ]
 
-  const handleOrder = (item: string, price: number) => {
+  const onhandleSubmit = () => {
+    if(order.id != 0){
+      setOrder({
+        ...order,
+        id: order.id+1,
+      })
+    }else{
+      setOrder({
+        ...order,
+        id: 0,
+      })
+      setOrder({...order, id: order.id+1})
+    }
+    console.log('Order:', order)
+  }
+
+  const handleOrder = (item: string) => {
+    const newItem:Product = product.find(pr => pr.name === item)
     setOrder({
       ...order,
-      id: order.id + 1,
       items: [...order.items, item],
-      total: order.total + price,
+      total: order.total + newItem?.price,
+      pattiesT: order.pattiesT + newItem.patties,
     })
-    console.log(order);
+    console.log('Item: ', newItem)
+    console.log('Order:', order);
   }
 
   const onHandleDelete = (index: number) => {
@@ -63,8 +85,6 @@ export default function POS() {
       total: newTotal,
     })
   }
-  // <h2 className="item-POS" onClick={() => handleOrder('Single SteakBurger', 5)}>Single SteakBurger</h2>
-  // <h2 className="item-POS" onClick={() => handleOrder('Double SteakBurger', 10)}>Double SteakBurger</h2>
 
   return (
     <div className="POS">
@@ -72,18 +92,18 @@ export default function POS() {
         <div className="grid-item">
           <div className="Receipt">
             <div className="grid-receipt">
-              <div className="grid-item">Order #___</div>
+              <div className="grid-item">Order #{order.id}</div>
               <div className="grid-item list">
                 <h4>Order details</h4>
                 {order.items.map((item, index) => (
-                  <div className="order-details">
+                  <div className="order-details" key={index}>
                     <div className="order-item">{item}</div>
-                    <div className="deleteItem" key={index} onClick={() => onHandleDelete(index)} >-</div>
+                    <div className="deleteItem" onClick={() => onHandleDelete(index)} >-</div>
                   </div>
                 ))}
               </div>
-              <div className="grid-item">Total: ${order.total} </div>
-              <div className="grid-item"><button>Place Order</button></div>
+              <div className="grid-item total">Total: ${order.total} </div>
+              <div className="grid-item placeO"><button onClick={() => onhandleSubmit()}>Place Order</button></div>
             </div>
           </div>
         </div>
@@ -93,7 +113,7 @@ export default function POS() {
               <div className="grid-item">
                 <div className="MenuItem">
                 {product.map((products, index) => (
-                  <h2 className="item-POS" key={index} onClick={() => handleOrder(products.name, products.price)}>{products.name}</h2>
+                  <h2 className="item-POS" key={index} onClick={() => handleOrder(products.name)}>{products.name}</h2>
                 ))
 
                 }  

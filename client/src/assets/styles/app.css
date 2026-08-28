@@ -143,3 +143,9 @@ body{
     transform: scale(1.05);
     transition: .5s;
 }
+.total{
+    height: fit-content;
+}
+.placeO{
+    margin-bottom: 15px;
+}
