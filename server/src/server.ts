@@ -27,6 +27,12 @@ const io = new Server(httpServer, {
 io.on('connection', (socket) => {
     console.log('user connected', socket.id);
 
+    socket.on('order:create',(newOrder) => {
+        console.log('New order received:', newOrder.numberOrder);
+        io.emit('order:new', newOrder);
+    });
+
+
     socket.on('disconnect', () => {
         console.log('user disconnected', socket.id);
     });
