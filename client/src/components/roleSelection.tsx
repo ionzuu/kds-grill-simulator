@@ -1,5 +1,6 @@
 import { useState } from "react";
 import POS from "./POS";
+import KDS from "./KDS";
 
 export default function roleSelection() {
   const [role, setRole] = useState<string>('');

@@ -2,7 +2,6 @@ import { useState } from "react"
 import { socket } from "../services/socket"
 
 interface Order {
-  id: number,
   items: string[],
   total: number,
   pattiesT: number,
@@ -17,7 +16,7 @@ interface Product {
 
 export default function POS() {
 
-  const [order, setOrder] = useState<Order>({ id: 0, items: [], total: 0 , pattiesT: 0})
+  const [order, setOrder] = useState<Order>({ items: [], total: 0 , pattiesT: 0})
 
   const product: Product[] = [
     {
@@ -41,19 +40,19 @@ export default function POS() {
   ]
 
   const onhandleSubmit = () => {
-    if(order.id != 0){
-      setOrder({
+    const newOrder = {
+      id: crypto.randomUUID(),
+      numberOrder: Math.floor(Math.random() * 1000)+100,
+      createdAt: new Date().toISOString(),
+      items: [{
         ...order,
-        id: order.id+1,
-      })
-    }else{
-      setOrder({
-        ...order,
-        id: 0,
-      })
-      setOrder({...order, id: order.id+1})
+      }
+      ],
+      status: 'Pending',
     }
-    console.log('Order:', order)
+    socket.emit('order:create', newOrder);
+
+    console.log('NewOrder:', newOrder)
   }
 
   const handleOrder = (item: string) => {
@@ -92,7 +91,7 @@ export default function POS() {
         <div className="grid-item">
           <div className="Receipt">
             <div className="grid-receipt">
-              <div className="grid-item">Order #{order.id}</div>
+              <div className="grid-item">Order #__</div>
               <div className="grid-item list">
                 <h4>Order details</h4>
                 {order.items.map((item, index) => (

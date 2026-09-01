@@ -135,6 +135,7 @@ body{
     width: min-content;
     padding: 20px;
     transition: .5s;
+    cursor: pointer;
 }
 .MenuItem>.item-POS:hover{
     background-color: #f6f5f7;
