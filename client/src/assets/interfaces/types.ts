@@ -11,4 +11,13 @@ interface Product {
   patties: number,
 }
 
-export type { Order, Product };
+interface OrderPOS {
+    id: string,
+    numberOrder: number,
+    createdAt: string,
+    items: Order[],
+    status: 'Pending',
+}
+}
+
+export type { Order, Product, OrderPOS };
