@@ -16,22 +16,30 @@ export default function KDS(){
 
     return (
         <>
-        <div className="menu">
-            <h1>KDS</h1>
-            {
-                Orders != null && Orders.length > 0 ? Orders.map((order, key) => ( 
-                <h1 key={key}>{
-                    order.items.map((item, itemKey) => (
-                        <div key={itemKey}>
-                            <span>{item.items.map((subItem) => (
-                                <h5>{subItem}</h5>
-                            ))}</span>
-                            <span>Patties:{item.pattiesT}</span>
+        <div className="KDS-menu">
+            <div className="KDS-title">
+                <h1>KDS</h1>
+            </div>
+            <div className="KDS-menuOrders">
+                {
+                    Orders != null && Orders.length > 0 ? Orders.map((order, key) => ( 
+                    <div className='KDS-orderItem' key={key}>
+                        <div className="KDS-orderHeader">
+                            <h4>Order #{order.numberOrder}</h4>
                         </div>
-                    ))}
-                </h1>
-                )) : <h1>No orders yet...</h1>
-            }
+                        {
+                        order.items.map((item, itemKey) => (
+                            <div className="KDS-orderItemDetails" key={itemKey}>
+                                {item.items.map((subItem) => (
+                                    <p>{subItem}</p>
+                                ))}
+                                <p>Patties:{item.pattiesT}</p>
+                            </div>
+                        ))}
+                    </div>
+                    )) : <h1>No orders yet...</h1>
+                }
+            </div>
         </div>
         </>
     )

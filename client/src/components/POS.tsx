@@ -1,18 +1,6 @@
 import { useState } from "react"
 import { socket } from "../services/socket"
-
-interface Order {
-  items: string[],
-  total: number,
-  pattiesT: number,
-}
-
-interface Product {
-  name: string,
-  shortcut: string,
-  price: number,
-  patties: number,
-}
+import type { Order, Product } from "../assets/interfaces/types"
 
 export default function POS() {
 
@@ -82,6 +70,7 @@ export default function POS() {
       ...order,
       items: newOrder.items,
       total: newTotal,
+      pattiesT: order.pattiesT - itemSelected.patties,
     })
   }
 
