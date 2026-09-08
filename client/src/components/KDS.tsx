@@ -4,6 +4,9 @@ import type { OrderPOS } from "../assets/interfaces/types";
 
 export default function KDS(){
     const [Orders, setOrders] = useState<OrderPOS[]>([]);
+    const [timers, setTimers] = useState<Record<number, number>>({});
+    const [minutes, setMinutes] = useState<number>(0);
+
     useEffect(()=>{
         function handleOrders(newOrder: OrderPOS) {
             setOrders((allOrders)=> [...allOrders, newOrder]);
@@ -13,6 +16,27 @@ export default function KDS(){
         socket.off('order:new', handleOrders);
     };
 },[]);
+
+    function handleTimers(orderNumber: number) {
+        setTimers(prev => (
+            { ...prev, [orderNumber]: setInterval(() => {
+            setTimers(prev => ({ ...prev, [orderNumber]: prev[orderNumber] + 1 }));
+        }, 1000) }));
+        if (timers[orderNumber] === 60) {
+            alert(`Order #${orderNumber} has been in the queue for 1 minute!`);
+            setMinutes(prev => prev + 1);
+            setTimers(prev => ({ ...prev, [orderNumber]: 0 }));
+        }
+        
+    }
+    
+    useEffect(() => {
+        Orders.forEach(order => {
+            if (!timers[order.numberOrder]) {
+                handleTimers(order.numberOrder);
+            }
+        });
+    }, [Orders]);
 
     return (
         <>
@@ -34,6 +58,9 @@ export default function KDS(){
                                     <p>{subItem}</p>
                                 ))}
                                 <p>Patties:{item.pattiesT}</p>
+                                <div className="KDS-timer">
+                                    Time: {minutes}:{timers[order.numberOrder] || 0}
+                                    </div>
                             </div>
                         ))}
                     </div>
