@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { socket } from "../services/socket";
 import type { OrderPOS } from "../assets/interfaces/types";
 
 export default function KDS(){
     const [Orders, setOrders] = useState<OrderPOS[]>([]);
     const [timers, setTimers] = useState<Record<number, number>>({});
-    const [minutes, setMinutes] = useState<number>(0);
+    const [minutes, setMinutes] = useState<Record<number, number>>({})
 
     useEffect(()=>{
         function handleOrders(newOrder: OrderPOS) {
@@ -17,18 +17,32 @@ export default function KDS(){
     };
 },[]);
 
-    function handleTimers(orderNumber: number) {
-        setTimers(prev => (
-            { ...prev, [orderNumber]: setInterval(() => {
-            setTimers(prev => ({ ...prev, [orderNumber]: prev[orderNumber] + 1 }));
-        }, 1000) }));
-        if (timers[orderNumber] === 60) {
-            alert(`Order #${orderNumber} has been in the queue for 1 minute!`);
-            setMinutes(prev => prev + 1);
-            setTimers(prev => ({ ...prev, [orderNumber]: 0 }));
-        }
-        
-    }
+const intervalRefs = useRef<Record<number, any>>({});
+
+function handleTimers(orderNumber: number) {
+    if (intervalRefs.current[orderNumber]) return;
+    intervalRefs.current[orderNumber] = setInterval(() => {
+        setTimers(prev => {
+            const currentSeconds = prev[orderNumber] || 0;
+            const nextSeconds = currentSeconds + 1;
+            
+            if (nextSeconds === 60) {
+                setMinutes(prevMins => ({...prevMins, [orderNumber]: (prevMins[orderNumber] || 0) + 1}));
+                setTimers(prev => ({ ...prev, [orderNumber]: 0 }));
+            }
+
+            return { ...prev, [orderNumber]: nextSeconds };
+        });
+    }, 1000);
+}
+
+useEffect(() => {
+    return () => {
+        Object.values(intervalRefs.current).forEach(clearInterval);
+    };
+}, []);
+
+
     
     useEffect(() => {
         Orders.forEach(order => {
@@ -59,7 +73,7 @@ export default function KDS(){
                                 ))}
                                 <p>Patties:{item.pattiesT}</p>
                                 <div className="KDS-timer">
-                                    Time: {minutes}:{timers[order.numberOrder] || 0}
+                                    Time: {minutes[order.numberOrder]-1 || 0}:{timers[order.numberOrder] || 0}
                                     </div>
                             </div>
                         ))}
