@@ -5,7 +5,7 @@ import type { OrderPOS } from "../assets/interfaces/types";
 export default function KDS(){
     const [Orders, setOrders] = useState<OrderPOS[]>([]);
     const [timers, setTimers] = useState<Record<number, number>>({});
-    const [minutes, setMinutes] = useState<Record<number, number>>({})
+    const [minutes, setMinutes] = useState<number, number>({})
 
     useEffect(()=>{
         function handleOrders(newOrder: OrderPOS) {
@@ -56,7 +56,7 @@ useEffect(() => {
         <>
         <div className="KDS-menu">
             <div className="KDS-title">
-                <h1>KDS</h1>
+                <h1>Grill Orders</h1>
             </div>
             <div className="KDS-menuOrders">
                 {
@@ -73,12 +73,12 @@ useEffect(() => {
                                 ))}
                                 <p>Patties:{item.pattiesT}</p>
                                 <div className="KDS-timer">
-                                    Time: {minutes[order.numberOrder]-1 || 0}:{timers[order.numberOrder] || 0}
+                                    Time: {minutes[order.numberOrder] || 0}:{timers[order.numberOrder] || 0}
                                     </div>
                             </div>
                         ))}
                     </div>
-                    )) : <h1>No orders yet...</h1>
+                    )) : <h1 className="not-yet">No orders yet...</h1>
                 }
             </div>
         </div>

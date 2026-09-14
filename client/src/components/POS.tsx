@@ -24,7 +24,25 @@ export default function POS() {
       shortcut: 'TipleSteak',
       price: 10,
       patties: 3,
-    }
+    },
+        {
+      name: 'BBQ SteakBurger',
+      shortcut: 'bbqSteak',
+      price: 15,
+      patties: 3,
+    },
+    {
+      name: 'Frisco Melt',
+      shortcut: 'FriscoMelt',
+      price: 12,
+      patties: 2,
+    },
+    {
+      name: 'Veggie Burger',
+      shortcut: 'VeggieBurger',
+      price: 5,
+      patties: 1,
+    },
   ]
 
   const onhandleSubmit = () => {
@@ -39,7 +57,7 @@ export default function POS() {
       status: 'Pending',
     }
     socket.emit('order:create', newOrder);
-
+    setOrder({ items: [], total: 0 , pattiesT: 0})
     console.log('NewOrder:', newOrder)
   }
 

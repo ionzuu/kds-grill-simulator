@@ -17,7 +17,7 @@ export default function roleSelection() {
                 <button onClick={() => setRole('POS')}>Order taker</button>
             </div>
             <div className="bottom-button">
-                <button onClick={() => setRole('KDS')}>KDS</button>
+                <button onClick={() => setRole('KDS')}>Grill Orders</button>
             </div>
         </div>
     )
