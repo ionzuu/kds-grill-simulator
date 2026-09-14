@@ -5,7 +5,7 @@ import type { OrderPOS } from "../assets/interfaces/types";
 export default function KDS(){
     const [Orders, setOrders] = useState<OrderPOS[]>([]);
     const [timers, setTimers] = useState<Record<number, number>>({});
-    const [minutes, setMinutes] = useState<number, number>({})
+    const [minutes, setMinutes] = useState<Record<number, number>>({});
 
     useEffect(()=>{
         function handleOrders(newOrder: OrderPOS) {
@@ -27,7 +27,10 @@ function handleTimers(orderNumber: number) {
             const nextSeconds = currentSeconds + 1;
             
             if (nextSeconds === 60) {
-                setMinutes(prevMins => ({...prevMins, [orderNumber]: (prevMins[orderNumber] || 0) + 1}));
+                 setMinutes(prevMins => ({
+                    ...prevMins, 
+                    [orderNumber]: (prevMins[orderNumber] || 0) + 1
+                }));
                 setTimers(prev => ({ ...prev, [orderNumber]: 0 }));
             }
 
